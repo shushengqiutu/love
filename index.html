@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .pic {
+    width: 120px;
+    height: 180px;
+    /* border: 1px red solid; */
+    margin: 150px auto 0;
+    position: relative;
+    background: url(./img/1.jpg);
+    background-size: 100%;
+    /*transform 旋转元素*/
+    transform-style: preserve-3d;
+    transform: perspective(800px) rotateX(-10deg) rotateY(0deg);
+
+  }
+
+  body {
+    background-color: black;
+    overflow: hidden;
+  }
+
+  .pic img {
+
+    position: absolute;
+    width: 120px;
+    height: 180px;
+    /* width: 100%;
+    height: 100%; */
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px #fff;
+    /*倒影的设置*/
+    -webkit-box-reflect: below 10px -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .5) 100%);
+  }
+
+  .pic p {
+    width: 1200px;
+    height: 1200px;
+    background: -webkit-radial-gradient(center center, 600px 600px, rgba(255, 255, 255, .5), rgba(0, 0, 0, 0));
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-top: -600px;
+    margin-left: -600px;
+    border-radius: 600px;
+    transform: rotateX(90deg);
+  }
+</style>
+
+<body>
+  <div class="pic" style="transform: perspective(800px) rotateX(-10deg) rotateY(0deg);">
+    <img src="img/1.jpg" ondragstart="return false" style="transform: rotateY(0deg) translateZ(300px);">
+    <img src="img/2.jpg" ondragstart="return false" style="transform: rotateY(32.7273deg) translateZ(300px);">
+    <img src="img/3.jpg" ondragstart="return false" style="transform: rotateY(65.4545deg) translateZ(300px);">
+    <img src="img/4.jpg" ondragstart="return false" style="transform: rotateY(98.1818deg) translateZ(300px);">
+    <img src="img/5.jpg" ondragstart="return false" style="transform: rotateY(130.909deg) translateZ(300px);">
+    <img src="img/6.jpg" ondragstart="return false" style="transform: rotateY(163.636deg) translateZ(300px);">
+    <img src="img/7.jpg" ondragstart="return false" style="transform: rotateY(196.364deg) translateZ(300px);">
+    <img src="img/8.jpg" ondragstart="return false" style="transform: rotateY(229.091deg) translateZ(300px);">
+    <img src="img/9.jpg" ondragstart="return false" style="transform: rotateY(261.818deg) translateZ(300px);">
+    <img src="img/10.jpg" ondragstart="return false" style="transform: rotateY(294.545deg) translateZ(300px);">
+    <img src="img/11.jpg" ondragstart="return false" style="transform: rotateY(327.273deg) translateZ(300px);">
+    <p></p>
+</body>
+<script src="jq.js">
+
+</script>
+<script type="text/javascript">
+  $(function () {
+
+    var imgL = $(".pic img").size();
+    var deg = 360 / imgL;
+    var roY = 0,
+      roX = -10;
+    var xN = 0,
+      yN = 0;
+    var play = null;
+
+    $(".pic img").each(function (i) {
+      $(this).css({
+
+        "transform": "rotateY(" + i * deg + "deg) translateZ(300px)"
+      });
+      $(this).attr('ondragstart', 'return false');
+
+    });
+
+    $(document).mousedown(function (ev) {
+      var x_ = ev.clientX;
+      var y_ = ev.clientY;
+      clearInterval(play);
+      console.log('我按下了');
+      $(this).bind('mousemove', function (ev) {
+        /*获取当前鼠标的坐标*/
+        var x = ev.clientX;
+        var y = ev.clientY;
+        /*两次坐标之间的距离*/
+        xN = x - x_;
+        yN = y - y_;
+
+        roY += xN * 0.2;
+        roX -= yN * 0.1;
+        console.log('移动');
+        //$('body').append('<div style="width:5px;height:5px;position:absolute;top:'+y+'px;left:'+x+'px;background-color:red"></div>');
+
+        $('.pic').css({
+          transform: 'perspective(800px) rotateX(' + roX + 'deg) rotateY(' + roY + 'deg)'
+        });
+        /*之前的鼠标坐标*/
+        x_ = ev.clientX;
+        y_ = ev.clientY;
+
+      });
+    }).mouseup(function () {
+      $(this).unbind('mousemove');
+      var play = setInterval(function () {
+
+        xN *= 0.95;
+        yN *= 0.95
+        if (Math.abs(xN) < 1 && Math.abs(yN) < 1) {
+          clearInterval(play);
+        }
+        roY += xN * 0.2;
+        roX -= yN * 0.1;
+        $('.pic').css({
+          transform: 'perspective(800px) rotateX(' + roX + 'deg) rotateY(' + roY + 'deg)'
+        });
+
+      }, 30);
+
+    });
+
+  });
+</script>
+
+</html>
